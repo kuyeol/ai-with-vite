@@ -8,7 +8,7 @@ import './style.css'
 // Get your Gemini API key by:
 // - Selecting "Add Gemini API" in the "Firebase Studio" panel in the sidebar
 // - Or by visiting https://g.co/ai/idxGetGeminiKey
-let API_KEY = 'TODO'
+let API_KEY = 'AIzaSyCTFY-MBprutyvpjEodSBSBr0DaK4rcJU8'
 
 let form = document.querySelector('form')
 let promptInput = document.querySelector('input[name="prompt"]')
@@ -30,7 +30,7 @@ form.onsubmit = async ev => {
       {
         role: 'user',
         parts: [
-          {inline_data: {mime_type: 'image/jpeg', data: imageBase64}},
+         // {inline_data: {mime_type: 'image/jpeg', data: imageBase64}},
           {text: promptInput.value},
         ],
       },

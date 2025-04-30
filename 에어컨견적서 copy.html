@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>에어컨 설치 견적서 (편집 가능)</title>
+    <style>
+        /* 기본 스타일 및 편집 관련 스타일 */
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+            font-size: 16px;
+        }
+        .quote-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 25px;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        h2 {
+            font-size: 20px;
+            margin-top: 10px;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 4px;
+            font-weight: 600;
+        }
+        .supplier-info table th {
+    width: 100px;  /* 원하는 값으로 조정 */
+}
+.supplier-info table td {
+    width: 150px;  /* 원하는 값으로 조정 */
+}
+        .info-section {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            gap: 50px;
+        }
+        .supplier-info, .customer-info {
+            width: 50%;
+            margin-top: 0;
+        }
+        .info-section table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        .info-section th, .info-section td {
+            border: none;
+            border-bottom: 1px solid #eee;
+            padding: 6px 8px;
+            text-align: left;
+            vertical-align: middle;
+            line-height: 1.2;
+            height: 24px;
+        }
+        .info-section tr:first-child th,
+        .info-section tr:first-child td { border-top: 1px solid #ddd; }
+        .info-section tr:last-child th,
+        .info-section tr:last-child td { border-bottom: 1px solid #ddd; }
+        .info-section th {
+            background-color: transparent;
+            width: 80px;
+            font-weight: 500;
+            color: #666;
+            padding-left: 0;
+            font-size: 13px;
+        }
+        .info-section td { color: #444; font-size: 14px; }
+        .info-section td[colspan] { padding-right: 0; }
+        .editable-cell {
+            cursor: pointer;
+            position: relative;
+        }
+        .editable-cell:hover { background-color: #f0f8ff; }
+        /* Items table 스타일 */
+        .items-section { margin-bottom: 25px; }
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            border: none;
+        }
+        .items-table thead tr {
+            border-top: 1px solid #999;
+            border-bottom: 1px solid #999;
+        }
+        .items-table th {
+            background-color: #fafafa;
+            font-weight: 500;
+            color: #2b2b2b;
+            padding: 16px 12px;
+            font-size: 15px;
+            border: none;
+            text-align: center;
+            vertical-align: middle;
+            line-height: 1.4;
+        }
+        .items-table th:first-child { padding-left: 20px; }
+        .items-table th:last-child { padding-right: 20px; }
+        .items-table td {
+            padding: 6px 6px;
+            border: none;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+            line-height: 1;
+            height: 0px;
+        }
+        .items-table td:nth-child(2) { text-align: center; 
+            width: 120px !important;
+            min-width: 220px !important;
+        }
+        .items-table tbody tr:last-child td { border-bottom: 1px solid #9b9b9b;
+
+         }
+        .items-table tfoot {
+            border-top: 1px solid #ddd;
+        text-align: right;
+        }
+        .items-table tfoot td {
+            border: none;
+            padding: 0px;
+            margin: 0px;
+        }
+        .items-table tfoot tr:first-child td {
+            padding: 10px;
+            margin: 0px; 
+            /* 원하는 간격 값으로 수정 */
+        }
+        .summary-label {
+            text-align: right;
+            padding: 6px 8px !important;
+            font-size: 15px;
+            font-weight: 400;
+            line-height: 1.2;
+        }
+        .summary-value {
+            text-align: right;
+            font-weight: 400;
+            /* padding: 6px 30px 6px 8px !important; */
+            /* font-size: 15px; */
+            letter-spacing: 1.8px !important;
+            text-align: right  !important;
+        }
+
+        .total-label, .total-value {
+            background-color: transparent !important;
+            font-weight: 900 !important;
+            font-size: 18px !important;
+            /* border: none !important; */
+            border-top: 1px solid #000000 !important;
+line-height: 2em !important;
+margin-right: 10px !important;
+
+        }
+        .total-value {
+            text-align: right !important;
+            font-weight: 900 !important;
+            letter-spacing: 1.8px !important;
+            text-align: right !important;
+            margin-right: 10px !important;
+        }
+
+            .total-kr {
+            background-color: transparent !important;
+            font-weight: 600;
+            border: none !important;
+            border-top: 1px solid #000000 !important;
+            padding: 5px 5px !important;  /* 상하 패딩 축소 */
+            min-width: 50px; /* 최소 너비 설정 */
+        }
+        .items-table tfoot tr:last-child td {
+            border-top: 1px solid #000000;
+            
+        }
+        /* 기타 섹션 스타일 */
+        .notes-section { margin-bottom: 10px; 
+          }
+        .notes-section h2 { margin-bottom: 8px; }
+        .notes-section ol { 
+            padding-left: 20px; margin-top: 8px; }
+        .notes-section li { 
+            list-style-type: decimal;
+            padding: 0px 5px; 
+            font-size: 11px;
+         }
+        .footer-section { margin-top: 10px; text-align: center; font-size: 12px; }
+        .footer-section .date { 
+            font-size: 11px;
+            margin-bottom: 1px; }
+        .footer-section .signature { 
+            font-size: 13px;
+            margin-top: 25px; font-weight: 900; }
+
+
+        /* 편집 중 Input 스타일 */
+        .editing-input {
+            width: 100%;
+            height: 100%;
+            border: 1px solid #007bff;
+            padding: 5px;
+            box-sizing: border-box;
+            font-family: inherit;
+            font-size: inherit;
+            text-align: inherit;
+            position: absolute;
+            top: 0; left: 0;
+            background-color: #fff;
+            z-index: 10;
+        }
+        .editing-input[type="number"] { text-align: right; }
+        /* 행 및 버튼 스타일 */
+        .add-row-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-size: 15px;
+            font-weight: 500;
+            display: flex;
+            gap: 8px;
+        }
+        .add-row-button:hover { background-color: #3400ee8a; }
+        .add-row-button svg { width: 16px; height: 16px; }
+        .add-row-container { padding: 10px 40px 10px 0; }
+        .action-buttons {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+        .save-button, .print-button, .reset-button {
+            color: white;
+            border: none;
+            padding: 2px 4px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 1px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .supplier-button {
+            background-color: #313131;
+            color: white;
+            border: none;
+            width: 7em;
+            padding: 8px 8px;
+            border-radius: 10px;
+            margin: 0px 0;
+            /* font-size: px; */
+            font-weight: 600;
+            /* display: flex; */
+            /* gap: 8px; */
+        }
+        .save-button { background-color: #28a745; }
+        .print-button { background-color: #17a2b8; }
+        .reset-button { background-color: #dc3545; }
+        .save-button:hover { background-color: #218838; }
+        .print-button:hover { background-color: #138496; }
+        .reset-button:hover { background-color: #c82333; }
+        .save-button svg, .print-button svg, .reset-button svg { width: 16px; height: 16px; }
+        .delete-row-button {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 0;
+            margin-left: auto;
+        }
+        .delete-row-button:hover { background-color: #c82333; }
+        .delete-row-button svg { width: 14px; height: 14px; }
+        .quote-date {
+            text-align: right;
+            margin-bottom: 15px;
+            font-size: 16px;
+            font-weight: 700;
+            color: #666;
+            padding-right: 15px;
+        }
+        .quote-date span { font-weight: 700; color: #333; margin-left: 8px; }
+        /* 테이블 헤더 최소 너비 */
+        .items-table th:nth-child(1) {
+            width: 40px !important;
+            min-width: 40px !important;
+        }
+
+        .items-table th:nth-child(2) { min-width: 60px; }
+        .items-table th:nth-child(3) { min-width: 45px; width: 45px; }
+        .items-table th:nth-child(4) { min-width: 45px; width: 45px; }
+        .items-table th:nth-child(5) { min-width: 100px; width: 100px; }
+        .items-table th:nth-child(6) { min-width: 10px; width: 100px; }
+        .items-table th:nth-child(7) { 
+            min-width: 60px; 
+        padding: 0px;
+    }
+   
+        /* 미디어 쿼리: 인쇄, 모바일 등 */
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+                background-color: #fff;
+                font-size: 11pt;
+            }
+            @page { size: A4 portrait; margin: 1.5cm; }
+            .quote-container {
+                width: 100%;
+                max-width: none;
+                margin: 0;
+                padding: 0;
+                border: none;
+                box-shadow: none;
+                background-color: #fff;
+            }
+            h1 {
+                font-size: 18pt;
+                margin-bottom: 10mm;
+                color: #000;
+                border-bottom: 1px solid #999;
+                font-weight: 500;
+            }
+            h2 {
+                font-size: 13pt;
+                border-bottom: 1px solid #eee;
+                font-weight: 500;
+                color: #555;
+            }
+            .add-row-container,
+            .add-row-button,
+            .action-buttons { display: none; }
+            .items-table th,
+            .items-table td { padding: 6px 12px; font-size: 10pt; }
+            .items-table td { line-height: 1.2; }
+        }
+        @media screen and (max-width: 768px) {
+            body { margin: 10px; font-size: 14px; }
+            .quote-container { padding: 15px; }
+            h1 { font-size: 24px; margin-bottom: 15px; }
+            h2 { font-size: 18px; }
+            .info-section { flex-direction: column; gap: 10px; }
+            .supplier-info, .customer-info { width: 100%; }
+            .items-table { display: block; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+            .items-table th, .items-table td { padding: 6px; font-size: 14px; }
+            .notes-section { font-size: 13px; }
+            .footer-section { font-size: 14px; }
+            .editing-input { font-size: 16px; padding: 8px; }
+            .editable-cell { min-height: 44px; }
+        }
+        @media screen and (max-width: 480px) {
+            body { margin: 5px; font-size: 13px; }
+            .quote-container { padding: 10px; }
+            h1 { font-size: 1.3em; }
+            .info-section table th { width: 60px; }
+            .items-table th, .items-table td { padding: 4px; font-size: 0.8em; }
+        }
+        /* 드롭다운 스타일 */
+        .unit-select {
+            width: 100%;
+            padding: 4px 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+            font-size: 14px;
+            color: #444;
+            cursor: pointer;
+            text-align: center;
+            font-family: 'Malgun Gothic', sans-serif;
+        }
+        .unit-select:hover { border-color: #aaa; }
+        .unit-select:focus { outline: none; border-color: #007bff; }
+        @media print {
+            .unit-select {
+                appearance: none;
+                border: none;
+                padding: 0;
+                font-size: 10pt;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="quote-container">
+        <h1>설 치 견 적 서</h1>
+        <div class="quote-date">
+            작성일자 : <span id="quote-date"></span>
+        </div>
+        <div class="info-section">
+            <div class="supplier-info">
+                <h2>공급자</h2>
+                <table>
+                    <tr>
+                        <th>상호</th>
+                        <td id="supplier-name" class="editable-cell"></td>
+                        <th>성명</th>
+                        <td id="supplier-representative" class="editable-cell"></td>
+                    </tr>
+                    <tr>
+                        <th>사업자번호</th>
+                        <td colspan="3" class="editable-cell"></td>
+                    </tr>
+                    <tr>
+                        <th>주소</th>
+                        <td colspan="3" class="editable-cell"></td>
+                    </tr>
+                    <tr>
+                        <th>연락처</th>
+                        <td colspan="3" class="editable-cell"></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="customer-info">
+                <h2>수신자</h2>
+                <table>
+                    <tr>
+                        <th>받으시는분</th>
+                        <td class="editable-cell"></td>
+                    </tr>
+                    <tr>
+                        <th>주소</th>
+                        <td class="editable-cell"></td>
+                    </tr>
+                    <tr>
+                        <th>연락처</th>
+                        <td class="editable-cell"></td>
+                    </tr>
+                    <tr>
+                        <th>설치 장소</th>
+                        <td class="editable-cell"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="items-section">
+            <h2>견적 내역</h2>
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>품 목</th>
+                        <th>규 격</th>
+                        <th>수 량</th>
+                        <th>단가(원)</th>
+                        <th>금액(원)</th>
+                        <th>비 고</th>
+                        <th style="width: 40px;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="item-row">
+                        <td>1</td>
+                        <td class="editable-cell">설치비</td>
+                        <td class="editable-cell">대</td>
+                        <td class="editable-cell quantity recalculate" data-type="number">1</td>
+                        <td class="editable-cell unit-price recalculate" data-type="number">100000</td>
+                        <td class="amount"></td>
+                        <td class="editable-cell"></td>
+                        <td>
+                            <button class="delete-row-button" onclick="deleteRow(this)">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr class="item-row">
+                        <td>2</td>
+                        <td class="editable-cell">배관</td>
+                        <td class="editable-cell">M</td>
+                        <td class="editable-cell quantity recalculate" data-type="number">1</td>
+                        <td class="editable-cell unit-price recalculate" data-type="number">15000</td>
+                        <td class="amount"></td>
+                        <td class="editable-cell"></td>
+                        <td>
+                            <button class="delete-row-button" onclick="deleteRow(this)">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr class="item-row">
+                        <td>3</td>
+                        <td class="editable-cell"></td>
+                        <td class="editable-cell"></td>
+                        <td class="editable-cell quantity recalculate" data-type="number"></td>
+                        <td class="editable-cell unit-price recalculate" data-type="number"></td>
+                        <td class="amount"></td>
+                        <td class="editable-cell"></td>
+                        <td>
+                            <button class="delete-row-button" onclick="deleteRow(this)">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr class="item-row">
+                        <td>4</td>
+                        <td class="editable-cell"></td>
+                        <td class="editable-cell"></td>
+                        <td class="editable-cell quantity recalculate" data-type="number"></td>
+                        <td class="editable-cell unit-price recalculate" data-type="number"></td>
+                        <td class="amount"></td>
+                        <td class="editable-cell"></td>
+                        <td>
+                            <button class="delete-row-button" onclick="deleteRow(this)">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr class="item-row">
+                        <td>5</td>
+                        <td class="editable-cell"></td>
+                        <td class="editable-cell"></td>
+                        <td class="editable-cell quantity recalculate" data-type="number"></td>
+                        <td class="editable-cell unit-price recalculate" data-type="number"></td>
+                        <td class="amount"></td>
+                        <td class="editable-cell"></td>
+                        <td>
+                            <button class="delete-row-button" onclick="deleteRow(this)">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="8">
+                            <div class="add-row-container">
+                                <button class="add-row-button" onclick="addNewRow()">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    </svg>
+                                    추가
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" class="summary-label">소계</td>
+                        <td></td>
+                        <td></td>
+                        <td id="subtotal" class="summary-value"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" class="summary-label">공급가액</td>
+                        <td></td>
+                        <td></td>
+                        <td id="supply-price" class="summary-value"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" class="summary-label">부가세 (VAT)</td>
+                        <td>공급가액의 10%</td>
+                        <td></td>
+                        <td id="vat" class="summary-value"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" class="summary-label total-label">합계 금액</td>
+                        <td id="total-amount-kr" class="total-kr"></td>
+                        <td></td>
+                        <td id="total-amount" class="summary-value total-value"></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div class="notes-section">
+            <h2>특이사항</h2>
+            <ol>
+                <li>본 견적 금액은 기본 설치 환경 기준이며, 현장 상황(배관 길이 초과, 위험 작업, 특수 타공, 전기 공사 등)에 따라 추가 비용이 발생할 수 있습니다.</li>
+                <li>설치 하자에 대한 보증 기간은 설치일로부터 1년입니다. (제품 자체의 보증은 제조사 규정에 따름)</li>
+            </ol>
+        </div>
+        <div class="footer-section">
+            <p>위와 같이 견적합니다.</p>
+            <p class="date" id="footer-date"></p>
+            <p class="signature">견적 제출자 : <span id="submitter-name" class="editable-cell"> </span> (인)</p>
+        </div>
+    </div>
+
+
+    
+    <div class="action-buttons">
+        <!-- // todo: --> 
+        <button onclick='insertEstimateRows([
+        { 품목: "스탠드 에어컨 설치비", 수량: 1, 단가: 100, 비고: "" },
+        { 품목: "벽걸이 에어컨 설치비", 수량: 1, 단가: 120, 비고: "" }
+    ])'>
+        견적 항목 추가
+    </button>
+
+        <button class="add-row-button" onclick="updateGeneratedText()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            견적 추가
+        </button>
+
+
+        <button class="save-button" onclick="downloadHTML()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                <polyline points="7 3 7 8 15 8"></polyline>
+            </svg>
+            저장
+        </button>
+        <button class="print-button" onclick="printWithFileName()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                <rect x="6" y="14" width="12" height="8"></rect>
+            </svg>
+            인쇄
+        </button>
+        <button class="reset-button" onclick="resetForm()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+                <path d="M21 3v5h-5"></path>
+                <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
+                <path d="M3 21v-5h5"></path>
+            </svg>
+            초기화
+        </button>
+<button class="supplier-button" onclick="toggleSupplierInfo()">
+     <span id="toggleSupplierLabel">사업자 : Null</span>
+</button>
+    </div>
+    <script>
+        // --- Helper Functions ---
+        function formatNumber(num) {
+            const parsedNum = parseFloat(String(num).replace(/,/g, ''));
+            return isNaN(parsedNum) ? '0' : parsedNum.toLocaleString('ko-KR');
+        }
+        function parseNumber(str) {
+            return parseFloat(String(str).replace(/,/g, '')) || 0;
+        }
+        function numberToKorean(number) {
+            const units = ["", "만", "억", "조"];
+            const smallUnits = ["", "십", "백", "천"];
+            const digits = ["", "일", "이", "삼", "사", "오", "육", "칠", "팔", "구"];
+            let result = "";
+            let unitIndex = 0;
+            number = parseNumber(number);
+            if (number === 0) return "영";
+            while (number > 0) {
+                let part = number % 10000;
+                number = Math.floor(number / 10000);
+                if (part > 0) {
+                    let partStr = "";
+                    for (let i = 0; i < 4; i++) {
+                        let digit = part % 10;
+                        part = Math.floor(part / 10);
+                        if (digit > 0) {
+                            partStr = digits[digit] + smallUnits[i] + partStr;
+                        }
+                    }
+                    partStr = partStr.replace(/^일([십백천])/g, '$1');
+                    result = partStr + units[unitIndex] + result;
+                }
+                unitIndex++;
+            }
+            return result.trim();
+        }
+
+        // --- UI Update Functions ---
+        function updateSubmitterName() {
+            const supplierName = document.getElementById('supplier-name')?.textContent || '회사명';
+            const submitterNameEl = document.getElementById('submitter-name');
+            if (submitterNameEl) submitterNameEl.textContent = supplierName;
+        }
+        function updateTotals() {
+            let subtotal = 0;
+            document.querySelectorAll('.item-row').forEach(row => {
+                const quantityEl = row.querySelector('.quantity');
+                const unitPriceEl = row.querySelector('.unit-price');
+                const amountEl = row.querySelector('.amount');
+                if (quantityEl && unitPriceEl && amountEl) {
+                    const quantity = parseNumber(quantityEl.textContent);
+                    const unitPrice = parseNumber(unitPriceEl.textContent);
+                    const amount = quantity * unitPrice;
+                    amountEl.textContent = formatNumber(amount);
+                    subtotal += amount;
+                    if (unitPriceEl.textContent.trim() !== '') {
+                        unitPriceEl.textContent = formatNumber(unitPrice);
+                    }
+                }
+            });
+            const supplyPrice = subtotal;
+            const vat = Math.round(supplyPrice * 0.1);
+            const totalAmount = supplyPrice + vat;
+            document.getElementById('subtotal').textContent = formatNumber(subtotal);
+            document.getElementById('supply-price').textContent = formatNumber(supplyPrice);
+            document.getElementById('vat').textContent = formatNumber(vat);
+            document.getElementById('total-amount').textContent = formatNumber(totalAmount);
+            document.getElementById('total-amount-kr').textContent = `일금 ${numberToKorean(totalAmount)}원 정`;
+        }
+        // --- Edit Functionality ---
+        function makeEditable(cell) {
+            if (cell.querySelector('.editing-input')) return;
+            // 규격 컬럼: 드롭다운 사용
+            if (cell.parentElement.querySelector('td:nth-child(3)') === cell) {
+                const originalValue = cell.textContent.trim();
+                const select = document.createElement('select');
+                select.className = 'unit-select';
+                ['대', 'M', '개'].forEach(option => {
+                    const opt = document.createElement('option');
+                    opt.value = option;
+                    opt.textContent = option;
+                    select.appendChild(opt);
+                });
+                select.value = originalValue || '대';
+                cell.textContent = '';
+                cell.appendChild(select);
+                select.focus();
+                const saveChanges = () => {
+                    cell.textContent = select.value;
+                    if (cell.classList.contains('recalculate')) updateTotals();
+                };
+                select.addEventListener('change', saveChanges);
+                select.addEventListener('blur', saveChanges);
+                return;
+            }
+            const originalValue = cell.textContent.trim();
+            const isNumberField = cell.dataset.type === 'number';
+            cell.innerHTML = '';
+            const input = document.createElement('input');
+            input.className = 'editing-input';
+            input.type = isNumberField ? 'number' : 'text';
+            input.value = isNumberField ? parseNumber(originalValue) : originalValue;
+            if (isNumberField) input.step = 'any';
+            cell.appendChild(input);
+            input.focus();
+            const saveChanges = () => {
+                const newValue = input.value.trim();
+                cell.removeChild(input);
+                cell.textContent = isNumberField ? formatNumber(newValue) : newValue;
+                if (cell.classList.contains('recalculate')) updateTotals();
+                if (cell.id === 'supplier-name') updateSubmitterName();
+            };
+            input.addEventListener('blur', saveChanges);
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    saveChanges();
+                } else if (e.key === 'Escape') {
+                    cell.removeChild(input);
+                    cell.textContent = originalValue;
+                }
+            });
+        }
+        // --- 데이터 저장 및 복원 ---
+        function saveFormData() {
+            const formData = {
+                supplierInfo: {},
+                customerInfo: {},
+                items: [],
+                submitterName: document.getElementById('submitter-name').textContent
+            };
+            document.querySelectorAll('.supplier-info table .editable-cell').forEach(cell => {
+                formData.supplierInfo[cell.id || cell.cellIndex] = cell.textContent.trim();
+            });
+            document.querySelectorAll('.customer-info table .editable-cell').forEach(cell => {
+                formData.customerInfo[cell.cellIndex] = cell.textContent.trim();
+            });
+            document.querySelectorAll('.item-row').forEach(row => {
+                formData.items.push({
+                    description: row.querySelector('td:nth-child(2)').textContent.trim(),
+                    unit: row.querySelector('td:nth-child(3)').textContent.trim(),
+                    quantity: row.querySelector('td:nth-child(4)').textContent.trim(),
+                    unitPrice: row.querySelector('td:nth-child(5)').textContent.trim(),
+                    note: row.querySelector('td:nth-child(7)').textContent.trim()
+                });
+            });
+            localStorage.setItem('invoiceData', JSON.stringify(formData));
+            showSaveNotification();
+        }
+        function showSaveNotification(isManual = false) {
+            const notification = document.createElement('div');
+            notification.className = 'save-notification';
+        
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 2000);
+        }
+        function restoreFormData() {
+            const savedData = localStorage.getItem('invoiceData');
+            if (!savedData) return;
+            const formData = JSON.parse(savedData);
+            const supplierTable = document.querySelector('.supplier-info table');
+            Object.entries(formData.supplierInfo).forEach(([key, value]) => {
+                const cell = supplierTable.querySelector(`#${key}`) ||
+                             supplierTable.querySelector(`td[data-key="${key}"]`);
+                if (cell) cell.textContent = value;
+            });
+            const customerCells = document.querySelector('.customer-info table').querySelectorAll('.editable-cell');
+            Object.values(formData.customerInfo).forEach((value, index) => {
+                if (customerCells[index]) customerCells[index].textContent = value;
+            });
+            const tbody = document.querySelector('.items-table tbody');
+            tbody.innerHTML = '';
+            formData.items.forEach((item, index) => {
+                const newRow = document.createElement('tr');
+                newRow.className = 'item-row';
+                newRow.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td class="editable-cell">${item.description}</td>
+                    <td class="editable-cell">${item.unit}</td>
+                    <td class="editable-cell quantity recalculate" data-type="number">${item.quantity}</td>
+                    <td class="editable-cell unit-price recalculate" data-type="number">${item.unitPrice}</td>
+                    <td class="amount"></td>
+                    <td class="editable-cell">${item.note}</td>
+                    <td>
+                        <button class="delete-row-button" onclick="deleteRow(this)">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+                    </td>`;
+                tbody.appendChild(newRow);
+            });
+            document.getElementById('submitter-name').textContent = formData.submitterName;
+            updateTotals();
+        }
+        function setupAutoSave() {
+            const container = document.querySelector('.quote-container');
+            let saveTimeout;
+            container.addEventListener('input', () => {
+                clearTimeout(saveTimeout);
+                saveTimeout = setTimeout(saveFormData, 1000);
+            });
+            container.addEventListener('blur', (e) => {
+                if (e.target.classList.contains('editing-input')) {
+                    setTimeout(saveFormData, 100);
+                }
+            }, true);
+        }
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            document.getElementById('quote-date').textContent = `${year}-${month}-${day}`;
+            document.getElementById('footer-date').textContent = `${year}년 ${month}월 ${day}일`;
+            updateTotals();
+            updateSubmitterName();
+            const container = document.querySelector('.quote-container');
+            if (container) {
+                container.addEventListener('dblclick', function(event) {
+                    const targetCell = event.target.closest('.editable-cell');
+                    if (targetCell) makeEditable(targetCell);
+                });
+            }
+            restoreFormData();
+            setupAutoSave();
+        });
+        // --- 새로운 행 추가 ---
+        function addNewRow() {
+            const tbody = document.querySelector('.items-table tbody');
+            const maxRows = 15; // 최대 항목 갯수 (원하는 숫자로 변경 가능)
+            const currentRows = tbody.querySelectorAll('tr').length;
+            if (currentRows >= maxRows) {
+                alert(`최대 ${maxRows}개의 항목만 추가할 수 있습니다.`);
+                return;
+            }
+            const rowCount = currentRows + 1;
+            const newRow = document.createElement('tr');
+            newRow.className = 'item-row';
+            newRow.innerHTML = `
+                <td>${rowCount}</td>
+                <td class="editable-cell"></td>
+                <td class="editable-cell"></td>
+                <td class="editable-cell quantity recalculate" data-type="number"></td>
+                <td class="editable-cell unit-price recalculate" data-type="number"></td>
+                <td class="amount"></td>
+                <td class="editable-cell"></td>
+                <td>
+                    <button class="delete-row-button" onclick="deleteRow(this)">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </td>`;
+            tbody.appendChild(newRow);
+            updateTotals();
+            saveFormData();
+        }
+        // --- HTML 다운로드 ---
+        function downloadHTML() {
+            const htmlContent = document.documentElement.outerHTML;
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const downloadLink = document.createElement('a');
+            downloadLink.href = URL.createObjectURL(blob);
+            const now = new Date();
+            const dateStr = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
+            downloadLink.download = `견적서_${dateStr}.html`;
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+            URL.revokeObjectURL(downloadLink.href);
+            const notification = document.createElement('div');
+            notification.className = 'save-notification';
+            notification.textContent = '파일이 다운로드되었습니다';
+            notification.style.position = 'fixed';
+            notification.style.top = '20px';
+            notification.style.left = '50%';
+            notification.style.transform = 'translateX(-50%)';
+            notification.style.backgroundColor = '#28a745';
+            notification.style.color = 'white';
+            notification.style.padding = '10px 20px';
+            notification.style.borderRadius = '4px';
+            notification.style.zIndex = '1000';
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 2000);
+        }
+        // --- 폼 초기화 ---
+        function resetForm() {
+            if (!confirm('모든 입력 내용이 초기화됩니다. 계속하시겠습니까?')) return;
+            const supplierName = document.getElementById('supplier-name');
+            if (supplierName) supplierName.textContent = '';
+            document.querySelectorAll('.customer-info .editable-cell').forEach(cell => cell.textContent = '');
+            const tbody = document.querySelector('.items-table tbody');
+            tbody.innerHTML = `
+                <tr class="item-row">
+                    <td>1</td>
+                    <td class="editable-cell">스탠드 에어컨 설치비</td>
+                    <td class="editable-cell">대</td>
+                    <td class="editable-cell quantity recalculate" data-type="number">1</td>
+                    <td class="editable-cell unit-price recalculate" data-type="number">100000</td>
+                    <td class="amount"></td>
+                    <td class="editable-cell"></td>
+                    <td>
+                        <button class="delete-row-button" onclick="deleteRow(this)">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+                    </td>
+                </tr>
+                <tr class="item-row">
+                    <td>2</td>
+                    <td class="editable-cell">벽걸이 에어컨 설치비</td>
+                    <td class="editable-cell">대</td>
+                    <td class="editable-cell quantity recalculate" data-type="number">1</td>
+                    <td class="editable-cell unit-price recalculate" data-type="number">100000</td>
+                    <td class="amount"></td>
+                    <td class="editable-cell"></td>
+                    <td>
+                        <button class="delete-row-button" onclick="deleteRow(this)">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+                    </td>
+                </tr>`;
+            for (let i = 3; i <= 5; i++) {
+                const newRow = document.createElement('tr');
+                newRow.className = 'item-row';
+                newRow.innerHTML = `
+                    <td>${i}</td>
+                    <td class="editable-cell"></td>
+                    <td class="editable-cell"></td>
+                    <td class="editable-cell quantity recalculate" data-type="number"></td>
+                    <td class="editable-cell unit-price recalculate" data-type="number"></td>
+                    <td class="amount"></td>
+                    <td class="editable-cell"></td>
+                    <td>
+                        <button class="delete-row-button" onclick="deleteRow(this)">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+                    </td>`;
+                tbody.appendChild(newRow);
+            }
+            document.getElementById('submitter-name').textContent = ' ';
+            updateTotals();
+            localStorage.removeItem('invoiceData');
+            const notification = document.createElement('div');
+            notification.className = 'save-notification';
+            notification.textContent = '모든 내용이 초기화되었습니다';
+            notification.style.position = 'fixed';
+            notification.style.top = '20px';
+            notification.style.left = '50%';
+            notification.style.transform = 'translateX(-50%)';
+            notification.style.backgroundColor = '#dc3545';
+            notification.style.color = 'white';
+            notification.style.padding = '10px 20px';
+            notification.style.borderRadius = '4px';
+            notification.style.zIndex = '1000';
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 2000);
+        }
+        // --- 행 삭제 및 재정렬 ---
+        function deleteRow(button) {
+            const row = button.closest('tr');
+            const tbody = row.parentElement;
+            if (tbody.querySelectorAll('tr').length <= 1) {
+                alert('최소 1개의 항목은 유지해야 합니다.');
+                return;
+            }
+            if (confirm('이 항목을 삭제하시겠습니까?')) {
+                row.remove();
+                renumberRows();
+                updateTotals();
+                saveFormData();
+            }
+        }
+        function renumberRows() {
+            document.querySelectorAll('.items-table tbody tr').forEach((row, index) => {
+                row.querySelector('td:first-child').textContent = index + 1;
+            });
+        }
+        // --- 인쇄 처리 ---
+        function printWithFileName() {
+            const now = new Date();
+            const dateStr = `${now.getFullYear()}_${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()-12)}`;
+            const supplierName = document.getElementById('supplier-name').textContent.trim() || '에어컨';
+            const customerName = document.querySelector('.customer-info tr:first-child td').textContent.trim() || '요청';
+            document.title = `${supplierName}_견적_${customerName}_${dateStr}`;
+            window.print();
+        }
+        const supplierSets = [
+    {
+        supplierName: "행복 에어컨",
+        supplierrepresentative: "정봉남",
+        businessNumber: "",
+        address: "대전 대덕구 늘봄1길 27 102호",
+        contact: "010-9690-2622",
+      buttonColor: "#4169e1"
+    },
+    {
+        supplierName: "꼼꼼 에어컨",
+        supplierrepresentative: "김철",
+        businessNumber: "784-18-00855",
+        address: "대전 중구 보문로 109길 31-18",
+        contact: "010-5820-7884",
+          buttonColor: "#ff4500"
+         // 예: 녹색
+
+    },
+    // 추가 공급자 세트가 있다면 여기 추가
+];
+let supplierSetIndex = 0;
+
+
+function insertEstimateRows(items) {
+  const tbody = document.querySelector('.items-table tbody');
+  let rowCount = tbody.querySelectorAll('tr').length;
+
+  items.forEach(item => {
+    rowCount++;
+
+    const newRow = document.createElement('tr');
+    newRow.className = 'item-row';
+    newRow.innerHTML = `
+      <td>${rowCount}</td>
+      <td class="editable-cell">${item.품목}</td>
+      <td class="editable-cell">대</td>
+      <td class="editable-cell quantity recalculate" data-type="number">${item.수량 || 1}</td>
+      <td class="editable-cell unit-price recalculate" data-type="number">${item.단가}</td>
+      <td class="amount"></td>
+      <td class="editable-cell">${item.비고 || ''}</td>
+      <td>
+        <button class="delete-row-button" onclick="deleteRow(this)">X</button>
+      </td>
+    `;
+    tbody.appendChild(newRow);
+  });
+
+  updateTotals();  
+  saveFormData();    
+}
+
+async function getGeminiResponse( promptText) {
+    try {
+        const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=AIzaSyCTFY-MBprutyvpjEodSBSBr0DaK4rcJU8", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+        
+            },
+            body: JSON.stringify({
+                prompt: promptText,
+                max_tokens: 150
+                // 추가 옵션이 필요하면 Gemini API 문서를 참고하여 입력합니다.
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        return data.generated_text || "";
+    } catch (error) {
+        console.error("Gemini API 호출 오류:", error);
+        return "";
+    }
+}
+        
+async function updateGeneratedText() {
+    const apiKey = "YOUR_GEMINI_API_KEY_HERE"; // Gemini API 키 입력
+    const promptText = "견적서를 기반으로 인공지능이 생성한 설명 텍스트를 보여주세요.";
+    
+    const generatedText = await getGeminiResponse(promptText);
+    const outputEl = document.getElementById("generated-output");
+    if (outputEl) {
+        outputEl.textContent = generatedText;
+    }
+}
+
+document.addEventListener("DOMContentLoaded", updateGeneratedText);
+
+
+function toggleSupplierInfo() {
+          
+            supplierSetIndex = (supplierSetIndex + 1) % supplierSets.length;
+    const newData = supplierSets[supplierSetIndex];
+    // 공급자 정보 업데이트 (공급자 정보 테이블 구조에 따라 수정)
+    document.getElementById('supplier-name').textContent = newData.supplierName;
+    document.getElementById('supplier-representative').textContent = newData.supplierrepresentative;
+    document.querySelector('.supplier-info tr:nth-child(2) td').textContent = newData.businessNumber;
+    document.querySelector('.supplier-info tr:nth-child(3) td').textContent = newData.address;
+    document.querySelector('.supplier-info tr:nth-child(4) td').textContent = newData.contact;
+    const toggleButton = document.querySelector("button.supplier-button");
+    if (toggleButton && newData.buttonColor) {
+        toggleButton.style.backgroundColor = newData.buttonColor;
+    }
+
+    document.getElementById('toggleSupplierLabel').textContent =  newData.supplierName + "";
+            updateSubmitterName(); // 공급자 정보가 변경되었을 때 제출자명도 업데이트
+        }
+
+
+
+    </script>
+</body>
+</html>
