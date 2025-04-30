@@ -632,14 +632,7 @@ margin-right: 10px !important;
         견적 항목 추가
     </button>
 
-        <button class="add-row-button" onclick="updateGeneratedText()">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-            견적 추가
-        </button>
+
 
 
         <button class="save-button" onclick="downloadHTML()">
@@ -673,13 +666,30 @@ margin-right: 10px !important;
 <button class="supplier-button" onclick="toggleSupplierInfo()">
      <span id="toggleSupplierLabel">사업자 : Null</span>
 </button>
-    </div>
+           </div>
 
-    
+<main>
     <form>
         <div class="prompt-box">
             <label>
-…
+                <input name="prompt" placeholder="Enter instructions here" type="text"
+                       value="extract user text">
+            </label>
+            <button type="submit">Go</button>
+        </div>
+    </form>
+    <p class="output"> </p>
+
+    <button onclick='insertEstimateRows([
+     <p class="output">(Response will appear here)</p>
+])'>
+    견적 항목 추가
+</button>
+
+
+</main>
+</body>
+    <script type="module" src="/main.js"></script>
     <script>
         // --- Helper Functions ---
         function formatNumber(num) {
@@ -1199,5 +1209,5 @@ function toggleSupplierInfo() {
 
 
     </script>
-</body>
+
 </html>
